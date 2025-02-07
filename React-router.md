@@ -1,4 +1,3 @@
-
 # 🚀 React Router Guide 〽️
 
 **[React Router Documentation](https://reactrouter.com/start/library/installation)**  
@@ -37,6 +36,9 @@ function App() {
           <Route path="product" element={<Products />} />
           <Route path="feat-product" element={<FeaturesProducts />} />
         </Route>
+        
+        {/* Protected Route Example */}
+        <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         
         {/* Fallback Route */}
         <Route path="*" element={<NoPageFound />} />
@@ -106,6 +108,60 @@ function One() {
       <p>Location: {locationName}</p>
     </div>
   );
+}
+```
+
+---
+
+## 🔒 Protected Routes  
+Protected routes ensure that only authenticated users can access certain pages.
+
+### Implementation:
+```jsx
+import { Navigate } from "react-router-dom";
+
+function ProtectedRoute({ children }) {
+  const isAuthenticated = true; // Replace with actual authentication check
+  return isAuthenticated ? children : <Navigate to="/login" />;
+}
+```
+
+### Usage:
+```jsx
+<Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+```
+
+---
+
+## 📡 Passing Data via Router  
+Data can be passed through state while navigating.
+
+### Example:
+```jsx
+import { useNavigate } from "react-router-dom";
+
+function Home() {
+  const navigate = useNavigate();
+
+  function handleClick() {
+    navigate("/summery", { state: { message: "Hello from Home" } });
+  }
+
+  return (
+    <button onClick={handleClick}>Go to Summary</button>
+  );
+}
+```
+
+### Access Data in the Target Component:
+```jsx
+import { useLocation } from "react-router-dom";
+
+function Summery() {
+  const location = useLocation();
+  const message = location.state?.message;
+
+  return <h1>{message}</h1>;
 }
 ```
 
@@ -184,4 +240,4 @@ import { NavLink } from "react-router-dom";
   font-weight: bold;
   color: blue;
 }
-
+```
