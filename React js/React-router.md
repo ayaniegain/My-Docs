@@ -1,5 +1,4 @@
-
-# 🚀 React Router Guide 〽️
+# 🚀 React Router Guide ⟿
 
 **[React Router Documentation](https://reactrouter.com/start/library/installation)**  
 
@@ -57,7 +56,7 @@ function App() {
 
 ---
 
-## 🔄 Nested Routing  
+## 💭 Nested Routing  
 > Example URL: `http://localhost:5173/details/one`
 
 ### Implementation:
@@ -111,7 +110,7 @@ function One() {
 
 ---
 
-## 🔙 Navigate Back  
+## 🖙 Navigate Back  
 ```jsx
 import { useNavigate } from "react-router-dom";
 
@@ -172,8 +171,8 @@ function Home() {
 import { NavLink } from "react-router-dom";
 
 // JSX
-<NavLink 
-  to="/home" 
+<NavLink
+  to="/home"
   className={({ isActive }) => (isActive ? "active" : "")}
 >
   Home
@@ -184,3 +183,77 @@ import { NavLink } from "react-router-dom";
   font-weight: bold;
   color: blue;
 }
+```
+
+---
+
+## 🔒 Protected Route Example  
+### Implementation in `App.js`
+```jsx
+import { Route, Routes } from "react-router";
+import "./App.css";
+import Cart from "./page/Cart";
+import Details from "./page/Details";
+import Home from "./page/Home";
+import Header from "./components/Header";
+import ProtectedRoute from "./page/ProtectedRoute";
+
+function App() {
+  return (
+    <>
+      <Header />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/details" element={<Details />} />
+        
+        {/* Protected Route */}
+        <Route path="/cart" element={<ProtectedRoute />}>
+          <Route index element={<Cart />} />
+        </Route>
+      </Routes>
+    </>
+  );
+}
+
+export default App;
+```
+
+### Creating `ProtectedRoute.js`
+```jsx
+import React, { useState } from "react";
+import { Outlet, useNavigate } from "react-router";
+
+function ProtectedRoute() {
+    const [isAllowed, setIsAllowed] = useState(false); // State to track access
+    const navigate = useNavigate();
+
+    function handleValidation(action) {
+        if (action === "yes") {
+            setIsAllowed(true);
+        } else {
+            setIsAllowed(false);
+            navigate("/");
+        }
+    }
+
+    return (
+        <div className="flex flex-col items-center justify-center h-screen text-center">
+            {isAllowed ? (
+                <Outlet />
+            ) : (
+                <>
+                    <h2 className="mb-4 text-xl font-semibold">Check Validation</h2>
+                    <div className="flex space-x-4">
+                        <button className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600" onClick={() => handleValidation("yes")}>Yes</button>
+                        <button className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600" onClick={() => handleValidation("no")}>No</button>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+}
+
+export default ProtectedRoute;
+```
+
